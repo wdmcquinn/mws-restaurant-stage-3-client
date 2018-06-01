@@ -5,17 +5,9 @@
     "type": "git",
     "url": "git+https://github.com/udacity/responsive-images.git"
   },
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-copy": "~0.8.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-nodeunit": "~0.4.1",
-    "grunt-contrib-uglify": "~0.5.0",
-    "grunt-mkdir": "~0.1.2"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "grunt-responsive-images": "^0.1.6"
+    "browser-sync": "^2.24.4"
   },
   "description": "--- #### _Three Stage Course Material Project - Restaurant Reviews_",
   "bugs": {
@@ -24,7 +16,7 @@
   "homepage": "https://github.com/udacity/responsive-images#readme",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "browser-sync start --server --file \"*.css, *.html, *.js\""
   },
   "author": "",
   "license": "ISC"
