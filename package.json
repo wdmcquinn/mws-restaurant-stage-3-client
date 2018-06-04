@@ -16,7 +16,7 @@
   "homepage": "https://github.com/udacity/responsive-images#readme",
   "main": "Gruntfile.js",
   "scripts": {
-    "start": "browser-sync start --server --files \"**/*\""
+    "start": "browser-sync start --server --files=\"**/*\""
   },
   "author": "",
   "license": "ISC"
