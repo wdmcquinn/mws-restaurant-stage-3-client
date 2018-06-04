@@ -322,22 +322,25 @@ nav h1 a {
 
   .inside #maincontent {
     flex-direction: row; 
-    flex-grow: 1;
+    flex-wrap: wrap;
   }
 
   #restaurant-container{
-    flex-basis: 100%;
-    margin: auto;
+    flex-basis: 40%;
+    margin-top: 125px;
+    order: 1;
   }
   #reviews-container{
-    flex-basis: 45%;
-    margin: 0; 
+    flex-basis: 40%;
+    margin: 0;
+    margin-top: 125px;
+    order: 2; 
   }
 
   .inside #map-container{
+    order: 3;
+    flex-basis: 100%;
     margin: 0;
-    order: 1;
-    flex-basis: 45%;
   }
 
 
