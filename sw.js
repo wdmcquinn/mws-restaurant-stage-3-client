@@ -25,11 +25,10 @@ const cacheFiles = [ // List of files that need to cache on install
  * Install the service worker and open the local cache.
  */
 
-self.addEventListener('install', (event) =>{
-  console.log("[SERVICE_WORKER] Installed");
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(FILES)
-      .then(cache => cache.addAll(cacheFiles))
+    .then(cache => cache.addAll(cacheFiles))
   );
 });
 
@@ -37,8 +36,7 @@ self.addEventListener('install', (event) =>{
  * Activate and clean up old caches.
  */
 
-self.addEventListener('activate', (event) =>{
-  console.log("[SERVICE_WORKER] Activated");
+self.addEventListener('activate', (event) => {
   const myCaches = [FILES, FETCHED];
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -62,10 +60,10 @@ self.addEventListener('activate', (event) =>{
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then(res => {
-      if (res) return res; // 
-      const reqCopy = event.request.clone(); 
-      return fetch(reqCopy).then(res => { 
-        if (!res || res.status != 200 || res.type !== 'basic') return res; 
+      if (res) return res;
+      const reqCopy = event.request.clone();
+      return fetch(reqCopy).then(res => {
+        if (!res || res.status != 200 || res.type !== 'basic') return res;
         const resCopy = res.clone();
         caches.open(FETCHED).then(cache => {
           cache.put(event.request, resCopy);
@@ -75,5 +73,3 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
-
-

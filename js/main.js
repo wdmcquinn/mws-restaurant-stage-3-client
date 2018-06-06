@@ -11,7 +11,7 @@ if ('serviceWorker' in navigator){ // Check to see if the browser supports servi
   navigator.serviceWorker
   .register('./sw.js')
   .then((registration) => {
-    console.log('Service Worker Registered');
+
   }).catch((err) => {
     console.log(err);
   })
@@ -107,6 +107,7 @@ updateRestaurants = () => {
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;
 
+
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
@@ -191,3 +192,16 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+/**
+ * Set focus based on url.
+*/
+function setFocus(event){
+  const url = location.href;
+  const target = '';
+  if (url.endsWith('8000/')){
+    const target = document.querySelector('#neighborhoods-select');
+    target.focus();
+  }
+}
+
