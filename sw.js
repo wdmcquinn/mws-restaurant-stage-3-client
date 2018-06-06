@@ -1,3 +1,12 @@
+
+/**
+ * I really struggled with this section. I found a link on slack that was posted by @MinimumViablePerson
+ *  that led me to a great resource with samples of the service worker being used in different ways. After
+ * reading it numerous time and a lot of googling later i was able to get it working correctly.
+ * here is the link to the repo.
+ * https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker
+ */
+
 const FILES = 'v1';
 const FETCHED = 'fetched';
 const cacheFiles = [ // List of files that need to cache on install
