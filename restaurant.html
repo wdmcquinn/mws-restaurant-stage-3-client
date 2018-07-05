@@ -70,7 +70,15 @@
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?&libraries=places&callback=initMap"></script>
+  <script>
+      let key = config.apiKey;
+      let s = document.getElementsByTagName('script')[3];
+      let googleScript = document.createElement('script');
+      googleScript.async;
+      googleScript.defer;
+      googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&libraries=places&callback=initMap`;
+      s.parentNode.insertBefore(googleScript, s);
+    </script>
   <!-- End scripts -->
 
 </body>

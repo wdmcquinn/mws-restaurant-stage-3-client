@@ -9,6 +9,7 @@
   <title>Restaurant Reviews</title>
 </head>
 
+
 <body onload="setFocus()">
   <header>
     <nav>
@@ -36,9 +37,19 @@
     </section>
   </main>
 
+  
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?&libraries=places&callback=initMap"></script>
+  <script src="js/env.js"></script>
+  <script>
+    let key = config.apiKey;
+    let s = document.getElementsByTagName('script')[3];
+    let googleScript = document.createElement('script');
+    googleScript.async;
+    googleScript.defer;
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&libraries=places&callback=initMap`;
+    s.parentNode.insertBefore(googleScript, s);
+  </script>
 
 
   <footer id="footer">
