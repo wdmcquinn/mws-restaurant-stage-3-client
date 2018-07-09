@@ -69,6 +69,7 @@
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <script src="/js/env.js"></script>
   <!-- Google Maps -->
   <script>
       let key = config.apiKey;
@@ -76,7 +77,7 @@
       let googleScript = document.createElement('script');
       googleScript.async;
       googleScript.defer;
-      googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&libraries=places&callback=initMap`;
+      googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${config.KEY}&libraries=places&callback=initMap`;
       s.parentNode.insertBefore(googleScript, s);
     </script>
   <!-- End scripts -->
