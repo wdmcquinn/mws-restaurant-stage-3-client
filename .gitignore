@@ -1,2 +1,3 @@
 .DS_Store
-js/env.js
+.env
+node_modules/

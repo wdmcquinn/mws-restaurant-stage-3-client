@@ -23,6 +23,7 @@ if ('serviceWorker' in navigator){ // Check to see if the browser supports servi
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+  loadMap();
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -205,5 +206,13 @@ function setFocus(event){
     const target = document.querySelector('#neighborhoods-select');
     target.focus();
   }
+}
+function loadMap(){
+    let s = document.getElementsByTagName('script')[3];
+    let googleScript = document.createElement('script');
+    googleScript.async;
+    googleScript.defer;
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.KEY}&libraries=places&callback=initMap`;
+    s.parentNode.insertBefore(googleScript, s);
 }
 
