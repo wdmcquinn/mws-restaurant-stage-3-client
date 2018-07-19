@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css">
+    <!--<link rel="stylesheet" href="css/styles.css"> -->
   <title>Restaurant Reviews</title>
 </head>
 
 
-<body onload="setFocus()">
+<body>
   <header>
     <nav>
       <h1>
@@ -35,23 +35,7 @@
       </div>
       <ul id="restaurants-list"></ul>
     </section>
-  </main>
-
-
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script src="/js/env.js"></script>
-  <script>
-    let key = config.apiKey;
-    let s = document.getElementsByTagName('script')[3];
-    let googleScript = document.createElement('script');
-    googleScript.async;
-    googleScript.defer;
-    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.KEY}&libraries=places&callback=initMap`;
-    s.parentNode.insertBefore(googleScript, s);
-  </script>
-
-
+  </main>  
   <footer id="footer">
     Copyright (c) 2017
     <a href="/">

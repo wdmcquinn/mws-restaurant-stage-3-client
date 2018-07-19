@@ -1,7 +1,7 @@
 /**
  * Common database helper functions.
  */
-class DBHelper {
+module.exports = class DBHelper {
 
   /**
    * Database URL.
@@ -158,4 +158,4 @@ class DBHelper {
     return marker;
   }
 
-}
+};
