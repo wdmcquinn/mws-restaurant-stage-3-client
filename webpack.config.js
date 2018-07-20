@@ -14,7 +14,8 @@ module.exports = {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name]-bundle.js',
       //publicPath: '/dist'
-  },
+    },
+  devtool: 'source-map',
   module: {
       rules: [
           {
@@ -23,7 +24,7 @@ module.exports = {
                   {
                       loader: 'babel-loader',
                       options: {
-                          presets: ['es2015']
+                          presets: ['env']
                       }
                   }
               ]
@@ -37,6 +38,7 @@ module.exports = {
       ]
   },
   plugins: [
+      new Dotenv(),
       new HtmlWebpackPlugin({
           filename: 'index.html',
           template: 'src/index.html',
@@ -48,9 +50,10 @@ module.exports = {
           chunks: ['restaurant']
       }),
       new CleanWebpackPlugin(['dist']),
-      new CopyWebpackPlugin([{from:'src/img', to:'img'}])
+      new CopyWebpackPlugin([{from:'src/img', to:'img'}]),
+      new CopyWebpackPlugin([{from:'src/sw.js', to:'sw.js'}])
   ], 
-  mode: 'production'
+  mode: 'development'
 }
 
 

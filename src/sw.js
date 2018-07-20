@@ -13,10 +13,8 @@ const cacheFiles = [ // List of files that need to cache on install
   './',
   './index.html',
   './restaurant.html',
-  './css/styles.css',
-  './js/dbhelper.js',
-  './js/main.js',
-  './js/restaurant_info.js',
+  './main-bundle.js',
+  './restaurant-bundle.js',
   'https://fonts.googleapis.com/css?family=Oswald|Mogra',
 ]
 
