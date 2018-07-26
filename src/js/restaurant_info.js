@@ -11,7 +11,7 @@ let map;
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+let initMap = () => {
   console.log('Fetch From URL.')
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
@@ -174,4 +174,4 @@ let getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-
+initMap();

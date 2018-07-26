@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+const loadGoogleMapsApi = require('load-google-maps-api');
 module.exports = class DBHelper {
 
   /**
@@ -21,7 +22,7 @@ module.exports = class DBHelper {
       .then(restaurants => callback(null, restaurants))
       .catch(error => callback(error, console.log(error))); //Server Error
   }
-
+  
   /**
    * Fetch a restaurant by its ID.
    */
@@ -148,14 +149,14 @@ module.exports = class DBHelper {
    * Map marker for a restaurant.
    */
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
+      const marker = new google.maps.Marker({
+        position: restaurant.latlng,
+        title: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant),
+        map: map,
+        animation: google.maps.Animation.DROP}
+      );
+      return marker;
   }
 
 };

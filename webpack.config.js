@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
       main: './src/js/main.js',
-      restaurant: './src/js/restaurant_info.js'
+      restaurant_info: './src/js/restaurant_info.js'
     },
   output: {
       path: path.resolve(__dirname, 'dist'),
@@ -47,12 +47,12 @@ module.exports = {
       new HtmlWebpackPlugin({
           filename: 'restaurant.html',
           template: 'src/restaurant.html',
-          chunks: ['restaurant']
+          chunks: ['restaurant_info']
       }),
       new CleanWebpackPlugin(['dist']),
       new CopyWebpackPlugin([{from:'src/img', to:'img'}]),
       new CopyWebpackPlugin([{from:'src/sw.js', to:'sw.js'}])
-  ], 
+  ],
   mode: 'development'
 }
 
