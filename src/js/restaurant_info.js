@@ -17,7 +17,6 @@ let initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      console.log('Fetched from URL: ', restaurant);
       loadGoogleMapsApi({key: process.env.KEY})
       .then(function (googleMaps){
       self.map = new google.maps.Map(document.getElementById('map'), {
@@ -25,9 +24,9 @@ let initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
-    })
-      fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+    })
+    fillBreadcrumb();
     }
   });
 }

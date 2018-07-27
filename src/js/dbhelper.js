@@ -148,6 +148,8 @@ module.exports = class DBHelper {
   /**
    * Map marker for a restaurant.
    */
+  
+  
   static mapMarkerForRestaurant(restaurant, map) {
       const marker = new google.maps.Marker({
         position: restaurant.latlng,
