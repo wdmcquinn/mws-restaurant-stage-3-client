@@ -6,6 +6,8 @@ const DBHelper = require('./dbhelper');
 const loadGoogleMapsApi = require('load-google-maps-api');
 
 const path = require('path');
+const cSelect = document.getElementById('cuisines-select');
+const nSelect = document.getElementById('neighborhoods-select');
 let restaurants,
   neighborhoods,
   cuisines
@@ -34,6 +36,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
   setFocus();
 });
+document.querySelectorAll("select").forEach(ele => {
+ele.addEventListener('change', updateRestaurants);
+});
+
+//cSelect.addEventListener('change', updateRestaurants);
+//nSelect.addEventListener('change', updateRestaurants);
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -110,9 +118,8 @@ window.initMap = loadGoogleMapsApi({key: process.env.KEY})
 /**
  * Update page and map for current restaurants.
  */
-let updateRestaurants = () => {
-  const cSelect = document.getElementById('cuisines-select');
-  const nSelect = document.getElementById('neighborhoods-select');
+function updateRestaurants() {
+  
 
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;

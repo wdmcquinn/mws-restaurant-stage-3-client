@@ -27,35 +27,32 @@ module.exports = class DBHelper {
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
+    // fetch restaurant by id
+    fetch(`${DBHelper.DATABASE_URL}?id=${id}`)
+      .then(response => response.json())
+      .then(restaurant => callback(null, restaurant))
+      .catch(err => callback(err, null));
   }
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
   static fetchRestaurantByCuisine(cuisine, callback) {
-    // Fetch all restaurants  with proper error handling
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Filter restaurants to have only given cuisine type
-        const results = restaurants.filter(r => r.cuisine_type == cuisine);
-        callback(null, results);
-      }
-    });
+    // Fetch all restaurants by cuisine type.
+    fetch(`${DBHelper.DATABASE_URL}?cuisine=${cuisine}`)
+    .then(response => response.json())
+    .then(restaurants => callback(null, restaurants))
+    .catch(err => callback(err, null));
+
+    // DBHelper.fetchRestaurants((error, restaurants) => {
+    //   if (error) {
+    //     callback(error, null);
+    //   } else {
+    //     // Filter restaurants to have only given cuisine type
+    //     const results = restaurants.filter(r => r.cuisine_type == cuisine);
+    //     callback(null, results);
+    //   }
+    // });
   }
 
   /**

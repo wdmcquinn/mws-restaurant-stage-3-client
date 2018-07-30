@@ -67,9 +67,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
   // If the URL contains the port of the server then dont cache the request.
-  if (event.request.url.indexOf(':1337') !== -1){
-    
 
+
+  if (event.request.url.indexOf(':1337') !== -1){
+    console.log(event.request.url.split('/'));
   }
   event.respondWith(
     caches.match(event.request).then(res => {
