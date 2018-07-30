@@ -6,18 +6,27 @@
  * here is the link to the repo.
  * https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker
  */
-
+const idb = require('idb');
 const FILES = 'v1';
 const FETCHED = 'fetched';
 const cacheFiles = [ // List of files that need to cache on install
   './',
   './index.html',
   './restaurant.html',
-  './main-bundle.js',
-  './restaurant_info-bundle.js',
+  './main.js',
+  './restaurant_info.js',
   'https://fonts.googleapis.com/css?family=Oswald|Mogra',
 ]
-
+const dbPromise = idb.open('places', 2, upgradeDB => {
+  switch (upgradeDB.oldVersion) {
+    case 0:
+    //Placeholder for database creation
+    case 1:
+    console.log('Creating the datastore.')
+    upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+    upgradeDB.transaction.objectStore('restaurants').createIndex('neighborhood', 'neighborhood');
+  }
+})
 /**
  * Install the service worker and open the local cache.
  */
@@ -35,6 +44,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   const myCaches = [FILES, FETCHED];
+
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return cacheNames.filter(cacheName => !myCaches.includes(cacheName));
@@ -57,9 +67,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
   // If the URL contains the port of the server then dont cache the request.
-  if (event.request.url.indexOf(':1337') !== -1){ 
-    console.log('SERVER_API', event.request.url);
-    return;
+  if (event.request.url.indexOf(':1337') !== -1){
+    
+
   }
   event.respondWith(
     caches.match(event.request).then(res => {

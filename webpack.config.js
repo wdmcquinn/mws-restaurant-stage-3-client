@@ -8,11 +8,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
       main: './src/js/main.js',
-      restaurant_info: './src/js/restaurant_info.js'
+      restaurant_info: './src/js/restaurant_info.js',
+      sw: './src/sw.js'
     },
   output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name]-bundle.js',
+      filename: '[name].js',
       //publicPath: '/dist'
     },
   devtool: 'source-map',
@@ -51,7 +52,7 @@ module.exports = {
       }),
       new CleanWebpackPlugin(['dist']),
       new CopyWebpackPlugin([{from:'src/img', to:'img'}]),
-      new CopyWebpackPlugin([{from:'src/sw.js', to:'sw.js'}])
+      //new CopyWebpackPlugin([{from:'src/sw.js', to:'sw.js'}])
   ],
   mode: 'development'
 }

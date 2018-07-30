@@ -1,5 +1,6 @@
 //css imports
 import '../css/styles.css';
+import idb from 'idb';
 
 const DBHelper = require('./dbhelper');
 const loadGoogleMapsApi = require('load-google-maps-api');
