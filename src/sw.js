@@ -71,6 +71,7 @@ self.addEventListener('fetch', (event) => {
 
   if (event.request.url.indexOf(':1337') !== -1){
     console.log(event.request.url.split('/'));
+    //console.log(event);
   }
   event.respondWith(
     caches.match(event.request).then(res => {

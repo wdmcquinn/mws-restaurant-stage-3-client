@@ -5,9 +5,9 @@ import idb from 'idb';
 const DBHelper = require('./dbhelper');
 const loadGoogleMapsApi = require('load-google-maps-api');
 
+
 const path = require('path');
-const cSelect = document.getElementById('cuisines-select');
-const nSelect = document.getElementById('neighborhoods-select');
+
 let restaurants,
   neighborhoods,
   cuisines
@@ -31,31 +31,25 @@ if ('serviceWorker' in navigator){ // Check to see if the browser supports servi
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
-  fetchNeighborhoods();
-  fetchCuisines();
   setFocus();
 });
-document.querySelectorAll("select").forEach(ele => {
-ele.addEventListener('change', updateRestaurants);
+document.querySelectorAll('select').forEach(select => {
+select.addEventListener('change', updateRestaurants);
 });
 
-//cSelect.addEventListener('change', updateRestaurants);
-//nSelect.addEventListener('change', updateRestaurants);
-
-/**
- * Fetch all neighborhoods and set their HTML.
- */
- let fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
-      self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
-    }
-  });
+let fetchFilters = () => {
+  DBHelper.fetchFilters((error, neighborhoods, cuisines) => {
+    if (error) console.log(error);
+    self.neighborhoods = neighborhoods;
+    self.cuisines = cuisines;
+    fillNeighborhoodsHTML();
+    fillCuisinesHTML();
+  })
 }
+
 
 /**
  * Set neighborhoods HTML.
@@ -67,20 +61,6 @@ let fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.innerHTML = neighborhood;
     option.value = neighborhood;
     select.append(option);
-  });
-}
-
-/**
- * Fetch all cuisines and set their HTML.
- */
-let fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.cuisines = cuisines;
-      fillCuisinesHTML();
-    }
   });
 }
 
@@ -112,14 +92,16 @@ window.initMap = loadGoogleMapsApi({key: process.env.KEY})
     center: loc,
     scrollwheel: false
   });
+  fetchFilters();
   updateRestaurants();
 })
 
 /**
  * Update page and map for current restaurants.
  */
-function updateRestaurants() {
-  
+function updateRestaurants(){
+  const cSelect = document.getElementById('cuisines-select');
+  const nSelect = document.getElementById('neighborhoods-select');
 
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;
@@ -219,7 +201,7 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
 function setFocus(event){
   const url = location.href;
   const target = '';
-  if (url.endsWith('8000/')){
+  if (url.endsWith('8080')){
     const target = document.querySelector('#neighborhoods-select');
     target.focus();
   }
