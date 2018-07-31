@@ -24,7 +24,6 @@ const dbPromise = idb.open('places', 2, upgradeDB => {
     case 1:
     console.log('Creating the datastore.')
     upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
-    upgradeDB.transaction.objectStore('restaurants').createIndex('neighborhood', 'neighborhood');
   }
 })
 /**
@@ -67,24 +66,58 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
   // If the URL contains the port of the server then dont cache the request.
-
-
-  if (event.request.url.indexOf(':1337') !== -1){
-    console.log(event.request.url.split('/'));
-    //console.log(event);
+  if (event.request.url.indexOf(':1337')!== -1) {
+    let id = event.request.url.indexOf('id=') == -1 ? -1 // assign -1 as id
+    : event.request.url.split('id=').pop(); //pull id off the end of the url
+    apiCall(event, id);
+  } else {
+    nonApiCall(event);
   }
-  event.respondWith(
-    caches.match(event.request).then(res => {
-      if (res) return res;
-      const reqCopy = event.request.clone();
-      return fetch(reqCopy).then(res => {
-        if (!res || res.status != 200 || res.type !== 'basic') return res;
-        const resCopy = res.clone();
-        caches.open(FETCHED).then(cache => {
-          cache.put(event.request, resCopy);
-        });
-        return res;
-      });
-    })
-  );
 });
+  const apiCall = (event, id) => {
+    event.respondWith(
+      dbPromise.then(db => {
+        let tx = db.transaction('restaurants', 'readonly');
+        let store = tx.objectStore('restaurants');
+        return store.get(id);
+      })
+      .then(data => {
+        return (
+          (data && data.data) ||
+          fetch(event.request)
+          .then(res => res.json())
+          .then(json => {
+            return dbPromise.then(db => {
+              let tx = db.transaction('restaurants', 'readwrite');
+              let store = tx.objectStore('restaurants');
+              store.put({
+                id: id,
+                data: json
+              });
+              return json;
+            });
+          })
+        );
+      })
+      .then(response => new Response(JSON.stringify(response)))
+      .catch(error => new Response("Error fetch data", {status: 500}))
+    );
+  }
+
+  const nonApiCall = (event) => {
+    event.respondWith(
+      caches.match(event.request).then(res => {
+        if (res) return res;
+        const reqCopy = event.request.clone();
+        return fetch(reqCopy).then(res => {
+          if (!res || res.status != 200 || res.type !== 'basic') return res;
+          const resCopy = res.clone();
+          caches.open(FETCHED).then(cache => {
+            cache.put(event.request, resCopy);
+          });
+          return res;
+        });
+      })
+    );
+  }
+
