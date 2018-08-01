@@ -65,7 +65,9 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
-  // If the URL contains the port of the server then dont cache the request.
+  if (event.request.url.indexOf('sockjs-node/info') !== -1) return; //webpack-dev-server related
+
+  // If the URL contains the port of the server then dont cache the request.x
   if (event.request.url.indexOf(':1337')!== -1) {
     let id = event.request.url.indexOf('id=') == -1 ? -1 // assign -1 as id
     : event.request.url.split('id=').pop(); //pull id off the end of the url
@@ -105,17 +107,19 @@ self.addEventListener('fetch', (event) => {
   }
 
   const nonApiCall = (event) => {
+    //console.log(event.request.url);
     event.respondWith(
       caches.match(event.request).then(res => {
         if (res) return res;
         const reqCopy = event.request.clone();
         return fetch(reqCopy).then(res => {
-          if (!res || res.status != 200 || res.type !== 'basic') return res;
+          if (res.type == 'basic' || event.request.url.indexOf('https://maps.googleapis.com/maps/api/js' != -1)){
           const resCopy = res.clone();
           caches.open(FETCHED).then(cache => {
             cache.put(event.request, resCopy);
           });
           return res;
+        }
         });
       })
     );

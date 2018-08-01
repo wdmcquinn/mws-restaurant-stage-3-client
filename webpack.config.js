@@ -3,6 +3,7 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 
 module.exports = {
@@ -52,7 +53,26 @@ module.exports = {
       }),
       new CleanWebpackPlugin(['dist']),
       new CopyWebpackPlugin([{from:'src/img', to:'img'}]),
-      //new CopyWebpackPlugin([{from:'src/sw.js', to:'sw.js'}])
+      new WebpackPwaManifest({
+        name: "Restaurant Reviews",
+        icons: [
+          {
+            src: path.resolve(__dirname, "src/icons/rricon-192.png"),
+            type: "image/png",
+            sizes: "192x192"
+          },
+          {
+            src: path.resolve(__dirname, "src/icons/rricon-512.png"),
+            type: "image/png",
+            sizes: "512x512"
+          }
+        ],
+        start_url: "index.html",
+        background_color: "#f3f3f3",
+        display: "standalone",
+        scope: "/",
+        theme_color: "#252831"
+      })
   ],
   mode: 'development'
 }
