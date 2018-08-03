@@ -3,7 +3,7 @@ import '../css/styles.css';
 import idb from 'idb';
 
 const DBHelper = require('./dbhelper');
-const loadGoogleMapsApi = require('load-google-maps-api');
+//const loadGoogleMapsApi = require('load-google-maps-api');
 
 
 const path = require('path');
@@ -11,7 +11,7 @@ const path = require('path');
 let restaurants,
   neighborhoods,
   cuisines
-let map
+let newMap 
 let markers = []
 
 
@@ -34,7 +34,10 @@ if ('serviceWorker' in navigator){ // Check to see if the browser supports servi
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  fetchFilters();
+  updateRestaurants();
   setFocus();
+  initMap();
 });
 document.querySelectorAll('select').forEach(select => {
 select.addEventListener('change', updateRestaurants);
@@ -78,23 +81,20 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
   });
 }
 
-/**
- * Initialize Google map, called from HTML.
- */
-window.initMap = loadGoogleMapsApi({key: process.env.KEY})
-.then(function (googleMaps){
-  let loc = {
-        lat: 40.722216,
-        lng: -73.987501
-      };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
-  fetchFilters();
-  updateRestaurants();
-})
+function initMap() {
+  newMap = L.map('mapid', {
+        center: [40.722216, -73.987501],
+        zoom: 12,
+      });
+  newMap.scrollWheelZoom.disable();
+   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfZZbmkqQjQQQ'
+}).addTo(newMap);
+}
+
 
 /**
  * Update page and map for current restaurants.
@@ -131,7 +131,7 @@ let resetRestaurants = (restaurants) => {
 
   // Remove all map markers
   if (self.markers){
-  self.markers.forEach(m => m.setMap(null));
+  self.markers.forEach(marker => marker.remove());
   }
   self.markers = [];
   self.restaurants = restaurants;
@@ -156,9 +156,12 @@ let createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.classList.add('lazyload');
   image.alt = `Image of ${restaurant.name} restauraunt.`;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.srcset = `/img/${restaurant.id}.jpg 1x, /img/${restaurant.id}_large_2x.jpg 2x`;
+  image.src = '/img/ph.png';
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+  image.setAttribute('data-srcset', `/img/${restaurant.id}.jpg 1x, /img/${restaurant.id}_large_2x.jpg 2x`);
+  //image.srcset = `/img/${restaurant.id}.jpg 1x, /img/${restaurant.id}_large_2x.jpg 2x`;
   li.append(image);
 
   const name = document.createElement('h1');
@@ -187,10 +190,11 @@ let createRestaurantHTML = (restaurant) => {
 let addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, newMap);
+    marker.on("click", onClick);
+    function onClick(){
+      window.location.href = marker.options.url;
+    }
     self.markers.push(marker);
   });
 }

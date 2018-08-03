@@ -2,32 +2,32 @@
 import '../css/styles.css';
 
 const DBHelper = require('./dbhelper');
-const loadGoogleMapsApi = require('load-google-maps-api');
-
 
 let restaurant;
-let map;
+let newMap;
 
 /**
  * Initialize Google map, called from HTML.
  */
-let initMap = () => {
-  console.log('Fetch From URL.')
+function initMap(){
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      loadGoogleMapsApi({key: process.env.KEY})
-      .then(function (googleMaps){
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
+      newMap = L.map('mapid', {
         center: restaurant.latlng,
-        scrollwheel: false
+        zoom: 12,
       });
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    })
-    fillBreadcrumb();
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfZZbmkqQjQQQ'
+    }).addTo(newMap);
+      DBHelper.mapMarkerForRestaurant(self.restaurant, newMap);
     }
+    fillBreadcrumb();
   });
 }
 

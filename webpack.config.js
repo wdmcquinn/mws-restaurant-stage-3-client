@@ -4,13 +4,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 
 module.exports = {
   entry: {
       main: './src/js/main.js',
       restaurant_info: './src/js/restaurant_info.js',
-      sw: './src/sw.js'
+      sw: './src/sw.js',
+      lazysizes: './src/js/lazysizes.min.js'
     },
   output: {
       path: path.resolve(__dirname, 'dist'),
@@ -18,6 +20,11 @@ module.exports = {
       //publicPath: '/dist'
     },
   devtool: 'source-map',
+  devServer:{
+    compress: true,
+    host: '0.0.0.0',
+    port: 8000
+  },
   module: {
       rules: [
           {
@@ -44,7 +51,7 @@ module.exports = {
       new HtmlWebpackPlugin({
           filename: 'index.html',
           template: 'src/index.html',
-          chunks: ['main']
+          chunks: ['main', 'lazysizes']
       }),
       new HtmlWebpackPlugin({
           filename: 'restaurant.html',
@@ -72,9 +79,10 @@ module.exports = {
         display: "standalone",
         scope: "/",
         theme_color: "#252831"
-      })
+      }),
+      new CompressionPlugin({ test: /\.js$/})
   ],
-  mode: 'development'
+  mode: 'production'
 }
 
 
