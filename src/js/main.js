@@ -32,7 +32,6 @@ if ('serviceWorker' in navigator) { // Check to see if the browser supports serv
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 
-
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchFilters();
   updateRestaurants();
@@ -40,6 +39,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
 });
 
+// Add onchange event for each select.
 document.querySelectorAll('select').forEach(select => {
   select.addEventListener('change', function(){
     updateRestaurants();
@@ -206,11 +206,7 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
  * Set focus based on url.
 */
 function setFocus(event) {
-  const url = location.href;
-  const target = '';
-  if (url.endsWith('8080')) {
     const target = document.querySelector('#neighborhoods-select');
     target.focus();
-  }
 }
 

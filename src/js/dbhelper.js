@@ -75,7 +75,10 @@ module.exports = class DBHelper {
     .catch(err => callback(err, null));
   }
 
-
+  /**
+   * 
+   * Fetch unique neighborhoods and cuisines for the select boxes
+   */
   static fetchFilters(callback){
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) callback(error, null);

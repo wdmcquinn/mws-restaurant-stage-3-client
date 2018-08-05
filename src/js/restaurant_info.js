@@ -7,7 +7,7 @@ let restaurant;
 let newMap;
 
 /**
- * Initialize Google map, called from HTML.
+ * Initialize LeafletJS and Mapbox, called from HTML.
  */
 function initMap(){
   fetchRestaurantFromURL((error, restaurant) => {
@@ -173,4 +173,5 @@ let getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+// Call the initMap Function
 initMap();
