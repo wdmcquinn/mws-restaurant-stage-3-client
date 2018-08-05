@@ -74,6 +74,9 @@ self.addEventListener('fetch', (event) => {
     nonApiCall(event);
   }
 });
+/**
+ * Handle calls to the backend api 
+ */
   const apiCall = (event, id) => {
     event.respondWith(
       dbPromise.then(db => {
@@ -103,15 +106,17 @@ self.addEventListener('fetch', (event) => {
       .catch(error => new Response("Error fetch data", {status: 500}))
     );
   }
-
+/**
+ * Handle non api calls
+ */
   const nonApiCall = (event) => {
     //console.log(event.request.url);
     event.respondWith(
       caches.match(event.request).then(res => {
         if (res) return res;
         const reqCopy = event.request.clone();
-        return fetch(reqCopy).then(res => {
-          if (res.type == 'basic' || event.request.url.indexOf('https://maps.googleapis.com/maps/api/js' != -1)){
+        return fetch(reqCopy).then(res => {//
+          if (res.type == 'basic' || event.request.url.indexOf('https://api.tiles.mapbox.com/v4/' != -1) || event.request.url.indexOf('googleapis.com' != -1)){
           const resCopy = res.clone();
           caches.open(FETCHED).then(cache => {
             cache.put(event.request, resCopy);
