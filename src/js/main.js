@@ -11,20 +11,20 @@ const path = require('path');
 let restaurants,
   neighborhoods,
   cuisines
-let newMap 
+let newMap
 let markers = []
 
 
 /**
  * Register Service Worker
  */
-if ('serviceWorker' in navigator){ // Check to see if the browser supports service workers
+if ('serviceWorker' in navigator) { // Check to see if the browser supports service workers
   navigator.serviceWorker
-  .register(path.resolve(__dirname, 'sw.js'))
-  .then((registration) => {
-  }).catch((err) => {
-    console.log(err);
-  })
+    .register(path.resolve(__dirname, 'sw.js'))
+    .then((registration) => {
+    }).catch((err) => {
+      console.log(err);
+    })
 }
 
 
@@ -39,8 +39,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
   setFocus();
   initMap();
 });
+
 document.querySelectorAll('select').forEach(select => {
-select.addEventListener('change', updateRestaurants);
+  select.addEventListener('change', function(){
+    updateRestaurants();
+  });
 });
 
 let fetchFilters = () => {
@@ -83,23 +86,23 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
 
 function initMap() {
   newMap = L.map('mapid', {
-        center: [40.722216, -73.987501],
-        zoom: 12,
-      });
+    center: [40.722216, -73.987501],
+    zoom: 12,
+  });
   newMap.scrollWheelZoom.disable();
-   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfZZbmkqQjQQQ'
-}).addTo(newMap);
+  }).addTo(newMap);
 }
 
 
 /**
  * Update page and map for current restaurants.
  */
-function updateRestaurants(){
+function updateRestaurants() {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -130,8 +133,8 @@ let resetRestaurants = (restaurants) => {
   ul.innerHTML = '';
 
   // Remove all map markers
-  if (self.markers){
-  self.markers.forEach(marker => marker.remove());
+  if (self.markers) {
+    self.markers.forEach(marker => marker.remove());
   }
   self.markers = [];
   self.restaurants = restaurants;
@@ -192,7 +195,7 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, newMap);
     marker.on("click", onClick);
-    function onClick(){
+    function onClick() {
       window.location.href = marker.options.url;
     }
     self.markers.push(marker);
@@ -202,10 +205,10 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
 /**
  * Set focus based on url.
 */
-function setFocus(event){
+function setFocus(event) {
   const url = location.href;
   const target = '';
-  if (url.endsWith('8080')){
+  if (url.endsWith('8080')) {
     const target = document.querySelector('#neighborhoods-select');
     target.focus();
   }

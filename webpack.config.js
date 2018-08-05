@@ -22,7 +22,6 @@ module.exports = {
   devtool: 'source-map',
   devServer:{
     compress: true,
-    host: '0.0.0.0',
     port: 8000
   },
   module: {
@@ -82,7 +81,7 @@ module.exports = {
       }),
       new CompressionPlugin({ test: /\.js$/})
   ],
-  mode: 'production'
+  mode: 'development'
 }
 
 

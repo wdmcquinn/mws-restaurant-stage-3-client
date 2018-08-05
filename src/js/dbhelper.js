@@ -59,27 +59,19 @@ module.exports = class DBHelper {
  * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
  */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
-    // Fetch all restaurants
-    let url = `${DBHelper.DATABASE_URL}?`;
-
-    //If cuisine is selected as a filter.
-    if (cuisine !== 'all'){
-      url += `cuisine_type=${cuisine}`;
-    }
-
-    // If both cuisine and nighborhood are selected.
-    if (cuisine !== 'all' && neighborhood !== 'all'){
-      url += `&neighborhood=${neighborhood}`;
-    }
-
-    // if only the neighborhood is selected
-    if (cuisine == 'all' && neighborhood !== 'all'){
-      url += `neighborhood=${neighborhood}`;
-    }
-
-    fetch(url)
+    fetch(`${DBHelper.DATABASE_URL}`)
     .then(response => response.json())
-    .then(restaurants => callback(null, restaurants))
+    .then(restaurants => {
+      let results = restaurants;
+      if (cuisine !== 'all'){
+        results = results.filter(r => r.cuisine_type == cuisine);
+      }
+      if (neighborhood !== 'all'){
+        results = results.filter(r => r.neighborhood == neighborhood);
+      }
+
+      callback(null, results);
+    })
     .catch(err => callback(err, null));
   }
 
