@@ -106,10 +106,34 @@ let fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours)
  * Create all reviews HTML and add them to the webpage.
  */
 let fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  const br = document.createElement('br');
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+  // Create the form for users to submit thier reviews
+ 
+  const reviewForm = document.createElement('form');
+  reviewForm.id = 'frm-review';
+reviewForm.innerHTML = `
+    <label for="name">Name</label><br>
+    <input type="text" id="name">
+  <br>
+  <label for="rating">Rating</label><br>
+    <input type="text" id="rating">
+  <br>
+    <label for="comments">Comments</label><br>
+    <textarea id="comments"></textarea>
+  <br>
+    <button type="button">Submit</button>
+`;
+container.appendChild(reviewForm);
+
+// //Restaurant ID
+//   const restaurantId = self.restaurant.id;
+
+
+
 
   if (!reviews) {
     const noReviews = document.createElement('p');
