@@ -1,6 +1,13 @@
+
 /**
  * Common database helper functions.
  */
+/**
+ * import the dbPromise Object
+ */
+import { dbPromise } from './indb';
+
+
 module.exports = class DBHelper {
 
 /**
@@ -116,5 +123,26 @@ module.exports = class DBHelper {
       })
       marker.addTo(map);
     return marker;
+  }
+
+  static change_fav_status(restaurant){
+    console.log(restaurant.id);
+    if (!restaurant.is_favorite || restaurant.is_favorite.toString() == 'false'){
+      restaurant.is_favorite = 'true';
+    } else if (restaurant.is_favorite.toString() == 'true'){
+      restaurant.is_favorite = 'false';
+    } else {
+      restaurant.is_favorite = 'false';
+    }
+    console.log(restaurant.id, restaurant.is_favorite);
+    dbPromise.then(function(db) {
+      let tx = db.transaction('restaurants', 'readwrite');
+      let store = tx.objectStore('restaurants');
+      store.put({
+        id: restaurant.id,
+        data: restaurant
+      });
+      return tx.complete;
+    })
   }
 };

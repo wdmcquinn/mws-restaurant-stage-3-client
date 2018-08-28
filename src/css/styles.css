@@ -181,6 +181,15 @@ nav h1 a {
   max-width: 100%;
   min-height: 248px;
 }
+#restaurants-list .tile-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#restaurants-list .is_fav{
+  max-width: 35px;
+  max-height: 35px;
+}
 #restaurants-list li h1 {
   color: #252831;
   font-family: Arial,sans-serif;

@@ -6,7 +6,8 @@
  * here is the link to the repo.
  * https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker
  */
-const idb = require('idb');
+
+import { dbPromise } from './js/indb';
 const FILES = 'v1';
 const FETCHED = 'fetched';
 const cacheFiles = [ // List of files that need to cache on install
@@ -17,13 +18,7 @@ const cacheFiles = [ // List of files that need to cache on install
   './restaurant_info.js',
   'https://fonts.googleapis.com/css?family=Oswald|Mogra',
 ]
-const dbPromise = idb.open('places', 2, upgradeDB => {
-  switch (upgradeDB.oldVersion) {
-    case 0:
-    //Placeholder for database creation
-    upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
-  }
-})
+
 /**
  * Install the service worker and open the local cache.
  */

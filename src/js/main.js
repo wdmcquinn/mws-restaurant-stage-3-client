@@ -1,11 +1,7 @@
 //css imports
 import '../css/styles.css';
-import idb from 'idb';
 
 const DBHelper = require('./dbhelper');
-//const loadGoogleMapsApi = require('load-google-maps-api');
-
-
 const path = require('path');
 
 let restaurants,
@@ -45,6 +41,8 @@ document.querySelectorAll('select').forEach(select => {
     updateRestaurants();
   });
 });
+
+
 
 let fetchFilters = () => {
   DBHelper.fetchFilters((error, neighborhoods, cuisines) => {
@@ -158,18 +156,43 @@ let createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
+
   image.className = 'restaurant-img';
   image.classList.add('lazyload');
   image.alt = `Image of ${restaurant.name} restauraunt.`;
   image.src = '/img/ph.png';
   image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
   image.setAttribute('data-srcset', `/img/${restaurant.id}.jpg 1x, /img/${restaurant.id}_large_2x.jpg 2x`);
-  //image.srcset = `/img/${restaurant.id}.jpg 1x, /img/${restaurant.id}_large_2x.jpg 2x`;
   li.append(image);
 
+
+  const d = document.createElement('div');
+  d.classList.add('tile-header');
+
+  // Name of Restaurant
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
-  li.append(name);
+  d.appendChild(name);
+
+  //Is the restaurant a favorite
+  const fav_image = document.createElement('img');
+  const is_fav = !restaurant.is_favorite || restaurant.is_favorite.toString() == "false" ? false : true;
+  console.log(is_fav);
+  fav_image.src = is_fav ? '../icons/favorite.png': '../icons/not_favorite.png' ;
+  fav_image.alt = is_fav ? 'Restaurant is a favorite.' : 'Restaurant is not a favorite.';
+  fav_image.classList.add('is_fav');
+  fav_image.id = `fav${restaurant.id}`;
+
+  fav_image.addEventListener('click', function(){
+    DBHelper.change_fav_status(restaurant);
+    updateFavStatus(restaurant);
+  });
+
+  d.appendChild(fav_image);
+  li.append(d);
+
+
+
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
@@ -201,7 +224,22 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+/**
+ * Change the favorite icon and alt text
+ */
+let updateFavStatus = (restaurant) =>{
+  let is_fav = restaurant.is_favorite.toString();
+  let imgTag = document.querySelector(`#fav${restaurant.id}`);
+  console.log(imgTag.src);
+    if (is_fav == 'true'){
+      imgTag.src = '../icons/favorite.png';
+      imgTag.alt = 'This restaurant is a favorite.';
+    } else {
+      imgTag.src = '../icons/not_favorite.png';
+      imgTag.alt = 'This restaurant is not a favorite';
+    }
 
+}
 /**
  * Set focus based on url.
 */

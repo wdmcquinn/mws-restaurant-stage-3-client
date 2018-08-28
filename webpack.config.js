@@ -59,6 +59,7 @@ module.exports = {
       }),
       new CleanWebpackPlugin(['dist']),
       new CopyWebpackPlugin([{from:'src/img', to:'img'}]),
+      new CopyWebpackPlugin([{from:'src/icons', to:'icons'}]),
       new WebpackPwaManifest({
         name: "Restaurant Reviews",
         icons: [
