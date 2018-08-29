@@ -143,6 +143,35 @@ module.exports = class DBHelper {
         data: restaurant
       });
       return tx.complete;
+    });
+    let url = `${DBHelper.DATABASE_URL}/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`
+    let options = {
+      method: 'POST'
+    }
+    console.log(url);
+    DBHelper.bgSync(url, options);
+  }
+  /**
+   * Since support isnt there yet for firefox I decided to
+   *  Follow in Doug Brows Steps by creating my own sync
+   */
+  static bgSync(url, options){
+    // Check for online status
+   DBHelper.addToOutbox(url,options);
+  }
+  static addToOutbox (url, options){
+    dbPromise.then(db => {
+      const tx = db.transaction('outbox', 'readwrite');
+      const store = tx.objectStore('outbox')
+      store.put({
+        data: {url, options}
+      })
     })
+    .catch(error => {console.log(error)})
+    .then(DBHelper.tryCommit());
+  }
+  static tryCommit(){
+    //
+    console.log('Commiting Changes');
   }
 };

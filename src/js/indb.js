@@ -6,6 +6,12 @@ module.exports = {
       case 0:
       //Placeholder for database creation
       upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+      case 1:
+      //Add Outbox
+      upgradeDB.createObjectStore('outbox', {
+        keyPath: 'id',
+        autoIncrement: true
+      });
     }
   })
 }

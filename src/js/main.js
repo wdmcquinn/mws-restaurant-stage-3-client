@@ -230,7 +230,6 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
 let updateFavStatus = (restaurant) =>{
   let is_fav = restaurant.is_favorite.toString();
   let imgTag = document.querySelector(`#fav${restaurant.id}`);
-  console.log(imgTag.src);
     if (is_fav == 'true'){
       imgTag.src = '../icons/favorite.png';
       imgTag.alt = 'This restaurant is a favorite.';
@@ -238,7 +237,6 @@ let updateFavStatus = (restaurant) =>{
       imgTag.src = '../icons/not_favorite.png';
       imgTag.alt = 'This restaurant is not a favorite';
     }
-
 }
 /**
  * Set focus based on url.
