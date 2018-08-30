@@ -177,7 +177,6 @@ let createRestaurantHTML = (restaurant) => {
   //Is the restaurant a favorite
   const fav_image = document.createElement('img');
   const is_fav = !restaurant.is_favorite || restaurant.is_favorite.toString() == "false" ? false : true;
-  console.log(is_fav);
   fav_image.src = is_fav ? '../icons/favorite.png': '../icons/not_favorite.png' ;
   fav_image.alt = is_fav ? 'Restaurant is a favorite.' : 'Restaurant is not a favorite.';
   fav_image.classList.add('is_fav');

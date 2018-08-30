@@ -135,6 +135,17 @@ module.exports = class DBHelper {
       restaurant.is_favorite = 'false';
     }
     console.log(restaurant.id, restaurant.is_favorite);
+    //TODO: update the -1 restaurant object to the new status
+    // dbPromise.then(db => {
+    //   let tx = db.transaction('restaurants', 'readwrite')
+    //   tx.objectStore('restaurants').iterateCursor(cursor => {
+    //     if (!cursor) return;
+    //     console.log(cursor.value);
+    //     cursor.continue();
+    //   });
+    //   tx.complete.then(() => console.log('complete'));
+    // })
+    // update the restaurant object.
     dbPromise.then(function(db) {
       let tx = db.transaction('restaurants', 'readwrite');
       let store = tx.objectStore('restaurants');
@@ -151,10 +162,7 @@ module.exports = class DBHelper {
     console.log(url);
     DBHelper.bgSync(url, options);
   }
-  /**
-   * Since support isnt there yet for firefox I decided to
-   *  Follow in Doug Brows Steps by creating my own sync
-   */
+ 
   static bgSync(url, options){
     // Check for online status
    DBHelper.addToOutbox(url,options);
@@ -170,8 +178,28 @@ module.exports = class DBHelper {
     .catch(error => {console.log(error)})
     .then(DBHelper.tryCommit());
   }
+
   static tryCommit(){
     //
     console.log('Commiting Changes');
-  }
+    dbPromise.then(db => {
+      const tx = db.transaction('outbox', 'readonly');
+      const store = tx.objectStore('outbox');
+      return store.getAll();
+    })
+    .then(messages => {
+      //if (!messages) return;
+      messages.map(function(message){
+        //console.log ('fetch:', message.data.url, message.data.options);
+      return fetch(message.data.url, message.data.options)
+        .then(response => response.json())
+        .then(data => {
+          return dbPromise.then(db => {
+            return db.transaction('outbox', 'readwrite').objectStore('outbox').delete(message.id);
+          })
+        })
+        .catch(err => console.log(err))
+      })
+    }
+  )}
 };
