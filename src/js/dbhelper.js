@@ -136,16 +136,11 @@ module.exports = class DBHelper {
     }
     console.log(restaurant.id, restaurant.is_favorite);
     //TODO: update the -1 restaurant object to the new status
-    // dbPromise.then(db => {
-    //   let tx = db.transaction('restaurants', 'readwrite')
-    //   tx.objectStore('restaurants').iterateCursor(cursor => {
-    //     if (!cursor) return;
-    //     console.log(cursor.value);
-    //     cursor.continue();
-    //   });
-    //   tx.complete.then(() => console.log('complete'));
-    // })
-    // update the restaurant object.
+    dbPromise.then(db => {
+      let tx = db.transaction('restaurants', 'readwrite')
+      let store = tx.objectStore('restaurants')
+    })
+    //update the restaurant object.
     dbPromise.then(function(db) {
       let tx = db.transaction('restaurants', 'readwrite');
       let store = tx.objectStore('restaurants');
