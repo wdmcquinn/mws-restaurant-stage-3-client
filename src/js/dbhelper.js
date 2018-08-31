@@ -124,9 +124,8 @@ module.exports = class DBHelper {
       marker.addTo(map);
     return marker;
   }
-
+  // Change the favorite Status
   static change_fav_status(restaurant){
-    console.log(restaurant.id);
     if (!restaurant.is_favorite || restaurant.is_favorite.toString() == 'false'){
       restaurant.is_favorite = 'true';
     } else if (restaurant.is_favorite.toString() == 'true'){
@@ -134,12 +133,7 @@ module.exports = class DBHelper {
     } else {
       restaurant.is_favorite = 'false';
     }
-    console.log(restaurant.id, restaurant.is_favorite);
-    //TODO: update the -1 restaurant object to the new status
-    dbPromise.then(db => {
-      let tx = db.transaction('restaurants', 'readwrite')
-      let store = tx.objectStore('restaurants')
-    })
+    DBHelper.updateRestaurantsInIDB(restaurant, {is_favorite: restaurant.is_favorite});
     //update the restaurant object.
     dbPromise.then(function(db) {
       let tx = db.transaction('restaurants', 'readwrite');
@@ -154,14 +148,16 @@ module.exports = class DBHelper {
     let options = {
       method: 'POST'
     }
-    console.log(url);
     DBHelper.bgSync(url, options);
   }
- 
+
+  // Start Background Sync
   static bgSync(url, options){
     // Check for online status
    DBHelper.addToOutbox(url,options);
   }
+
+  // Add requests to outbox
   static addToOutbox (url, options){
     dbPromise.then(db => {
       const tx = db.transaction('outbox', 'readwrite');
@@ -174,27 +170,54 @@ module.exports = class DBHelper {
     .then(DBHelper.tryCommit());
   }
 
+  // Attempt to commit changes to the database.
   static tryCommit(){
-    //
-    console.log('Commiting Changes');
     dbPromise.then(db => {
       const tx = db.transaction('outbox', 'readonly');
       const store = tx.objectStore('outbox');
       return store.getAll();
     })
     .then(messages => {
-      //if (!messages) return;
+      if (!messages) return;
       messages.map(function(message){
-        //console.log ('fetch:', message.data.url, message.data.options);
       return fetch(message.data.url, message.data.options)
         .then(response => response.json())
         .then(data => {
+          // Delete the message from the outbox.
           return dbPromise.then(db => {
-            return db.transaction('outbox', 'readwrite').objectStore('outbox').delete(message.id);
+            return db.transaction('outbox', 'readwrite')
+            .objectStore('outbox')
+            .delete(message.id); 
           })
         })
         .catch(err => console.log(err))
       })
     }
   )}
+
+  //Update the main restaurant object (where id is -1)
+  static updateRestaurantsInIDB(res, object){
+    dbPromise.then(db => {
+      const tx = db.transaction('restaurants', 'readwrite');
+      const resObj = tx
+      .objectStore('restaurants')
+      .get(-1)
+      .then(resObj => {
+        if (!resObj) return;
+        const resArr = resObj.data.filter(o => o.id == res.id);
+        let updateObj = resArr[0];
+          if (!updateObj) return;
+          const objKeys = Object.keys(object);
+          // do the update
+          objKeys.forEach(k => updateObj[k] = object[k]);
+          // put the updated object back in idb
+          dbPromise.then(db => {
+            return db
+            .transaction('restaurants', 'readwrite')
+            .objectStore('restaurants')
+            .put({id: -1, data: resObj.data});
+          })
+      })
+    })
+  }
 };
