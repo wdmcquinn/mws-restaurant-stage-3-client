@@ -124,6 +124,7 @@ module.exports = class DBHelper {
       marker.addTo(map);
     return marker;
   }
+
   // Change the favorite Status
   static change_fav_status(restaurant){
     if (!restaurant.is_favorite || restaurant.is_favorite.toString() == 'false'){
@@ -148,13 +149,7 @@ module.exports = class DBHelper {
     let options = {
       method: 'POST'
     }
-    DBHelper.bgSync(url, options);
-  }
-
-  // Start Background Sync
-  static bgSync(url, options){
-    // Check for online status
-   DBHelper.addToOutbox(url,options);
+    DBHelper.addToOutbox(url, options);
   }
 
   // Add requests to outbox
@@ -195,8 +190,16 @@ module.exports = class DBHelper {
     }
   )}
 
-  //Update the main restaurant object (where id is -1)
-  static updateRestaurantsInIDB(res, object){
+/**
+  *  Huge thanks to Doug Brown for the videos and walkthroughs.
+  *  His was the only example i could find that made sense and
+  *  allowed me to complete this part.
+ */
+
+  /**
+   * Update the main restaurants object
+   */
+  static updateRestaurantsInIDB(restaunt, object){
     dbPromise.then(db => {
       const tx = db.transaction('restaurants', 'readwrite');
       const resObj = tx
@@ -204,7 +207,7 @@ module.exports = class DBHelper {
       .get(-1)
       .then(resObj => {
         if (!resObj) return;
-        const resArr = resObj.data.filter(o => o.id == res.id);
+        const resArr = resObj.data.filter(o => o.id == restaunt.id);
         let updateObj = resArr[0];
           if (!updateObj) return;
           const objKeys = Object.keys(object);
