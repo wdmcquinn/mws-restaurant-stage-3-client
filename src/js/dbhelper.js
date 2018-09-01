@@ -94,6 +94,7 @@ module.exports = class DBHelper {
       const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
       const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
     callback(null, uniqueNeighborhoods, uniqueCuisines);
+    DBHelper.tryCommit();
     });
   }
 

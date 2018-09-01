@@ -89,7 +89,7 @@ self.addEventListener('fetch', (event) => {
               let tx = db.transaction('restaurants', 'readwrite');
               let store = tx.objectStore('restaurants');
               store.put({
-                id: id,
+                id: parseInt(id),
                 data: json
               });
               return json;

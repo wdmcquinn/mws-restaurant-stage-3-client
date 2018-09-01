@@ -39,10 +39,9 @@ function initMap(){
     callback(null, self.restaurant)
     return;
   }
-  const id = getParameterByName('id');
+  const id = parseInt(getParameterByName('id'));
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
-    callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
@@ -60,8 +59,26 @@ function initMap(){
  * Create restaurant HTML and add it to the webpage
  */
 let fillRestaurantHTML = (restaurant = self.restaurant) => {
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+
+  //Is the restaurant a favorite
+  restaurant.id = parseInt(restaurant.id);
+  const d = document.querySelector('.name-header');
+  const fav_image = document.createElement('img');
+  const is_fav = !restaurant.is_favorite || restaurant.is_favorite.toString() == "false" ? false : true;
+  fav_image.src = is_fav ? '../icons/favorite.png': '../icons/not_favorite.png' ;
+  fav_image.alt = is_fav ? 'Restaurant is a favorite.' : 'Restaurant is not a favorite.';
+  fav_image.classList.add('is_fav');
+  fav_image.id = `fav${restaurant.id}`;
+
+  fav_image.addEventListener('click', function(){
+    DBHelper.change_fav_status(restaurant);
+    updateFavStatus(restaurant);
+  });
+
+  d.appendChild(fav_image);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
@@ -80,6 +97,18 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   fillReviewsHTML();
+}
+
+let updateFavStatus = (restaurant) =>{
+  let is_fav = restaurant.is_favorite.toString();
+  let imgTag = document.querySelector(`#fav${restaurant.id}`);
+    if (is_fav == 'true'){
+      imgTag.src = '../icons/favorite.png';
+      imgTag.alt = 'This restaurant is a favorite.';
+    } else {
+      imgTag.src = '../icons/not_favorite.png';
+      imgTag.alt = 'This restaurant is not a favorite';
+    }
 }
 
 /**

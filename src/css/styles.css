@@ -186,9 +186,18 @@ nav h1 a {
   align-items: center;
   justify-content: space-between;
 }
-#restaurants-list .is_fav{
+#restaurant-container .name-header{
+  width: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.is_fav{
   max-width: 35px;
   max-height: 35px;
+}
+.name-header .is_fav{
+  padding-bottom: 20px;
 }
 #restaurants-list li h1 {
   color: #252831;
