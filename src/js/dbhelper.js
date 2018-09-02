@@ -11,12 +11,17 @@ import { dbPromise } from './indb';
 module.exports = class DBHelper {
 
 /**
- * Database URL.
+ * Database URLS.
  * Change this to restaurants.json file location on your server.
  */
   static get DATABASE_URL() {
     const port = 1337  // Change this to your server port
     return `http://localhost:${port}/restaurants`;
+  }
+
+  static get REVIEWS_URL() {
+    const port = 1337
+    return `http://localhost:${port}/reviews`;
   }
 
 /**
@@ -38,6 +43,17 @@ module.exports = class DBHelper {
       .then(response => response.json())
       .then(restaurant => callback(null, restaurant))
       .catch(err => callback(err, null));
+  }
+  /**
+   * Fetch reviews by restauraunts id
+   */
+  static fetchReviewsById(id, callback) {
+    fetch(`${DBHelper.REVIEWS_URL}/?restaurant_id=${id}`, {method: 'GET'})
+      .then(response =>   {
+        response.json()
+        .then(response => callback(null, response))
+        .catch(err => callback(err, null));
+      })
   }
 
 /**

@@ -5,6 +5,7 @@ const DBHelper = require('./dbhelper');
 
 let restaurant;
 let newMap;
+let id;
 
 /**
  * Initialize LeafletJS and Mapbox, called from HTML.
@@ -28,6 +29,7 @@ function initMap(){
       DBHelper.mapMarkerForRestaurant(self.restaurant, newMap);
     }
     fillBreadcrumb();
+    DBHelper.tryCommit();
   });
 }
 
@@ -96,7 +98,10 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchReviewsById(restaurant.id, function(error, reviews){
+    if(error) return;
+    fillReviewsHTML(reviews);
+  });
 }
 
 let updateFavStatus = (restaurant) =>{
@@ -134,7 +139,8 @@ let fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours)
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-let fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+let fillReviewsHTML = (reviews) => {
+  self.restaurant.reviews = reviews;
   const br = document.createElement('br');
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
@@ -144,26 +150,22 @@ let fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  
   const reviewForm = document.createElement('form');
   reviewForm.id = 'frm-review';
-reviewForm.innerHTML = `
-    <label for="name">Name</label><br>
-    <input type="text" id="name">
-  <br>
-  <label for="rating">Rating</label><br>
-    <input type="text" id="rating">
-  <br>
-    <label for="comments">Comments</label><br>
-    <textarea id="comments"></textarea>
-  <br>
-    <button type="button">Submit</button>
-`;
-container.appendChild(reviewForm);
+  reviewForm.innerHTML = `
+      <label for="name">Name</label><br>
+      <input type="text" id="name">
+    <br>
+    <label for="rating">Rating</label><br>
+      <input type="text" id="rating">
+    <br>
+      <label for="comments">Comments</label><br>
+      <textarea id="comments"></textarea>
+    <br>
+      <button type="button">Submit</button>
+  `;
+  container.appendChild(reviewForm);
+  container.appendChild(br);
 
-// //Restaurant ID
-//   const restaurantId = self.restaurant.id;
-
-
-
-
+  console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -171,7 +173,8 @@ container.appendChild(reviewForm);
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+ 
+   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
@@ -181,13 +184,17 @@ container.appendChild(reviewForm);
  * Create review HTML and add it to the webpage.
  */
 let createReviewHTML = (review) => {
+  let updatedDate = new Date(review.updatedAt);
+  let lastUpdate = `${updatedDate.getMonth()}/${updatedDate.getDay()}/${updatedDate.getFullYear()}`;
+
+  console.log(lastUpdate);
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = `<p>Date: ${lastUpdate}</p>`;
   li.appendChild(date);
 
   const rating = document.createElement('p');
