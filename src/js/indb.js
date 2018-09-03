@@ -1,7 +1,7 @@
 const idb = require('idb');
 
 module.exports = {
-   dbPromise: idb.open('places', 2, upgradeDB => {
+   dbPromise: idb.open('places', 3, upgradeDB => {
     switch (upgradeDB.oldVersion) {
       case 0:
       //Placeholder for database creation
@@ -12,6 +12,10 @@ module.exports = {
         keyPath: 'id',
         autoIncrement: true
       });
+      let reviews = upgradeDB.createObjectStore('reviews', {
+        keyPath: 'id'
+      });
+      reviews.createIndex('restaurant_id', 'restaunt_id');
     }
   })
 }

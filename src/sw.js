@@ -59,10 +59,6 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
   if (event.request.url.indexOf('sockjs-node/info') !== -1) return; //webpack-dev-server related
-  if (event.request.url.indexOf('reviews') !== -1) {
-    console.log('reviews');
-    return;
-  }
   // If the URL contains the port of the server then dont cache the request.x
   if (event.request.url.indexOf(':1337')!== -1) {
     let id = event.request.url.indexOf('id=') == -1 ? -1 // assign -1 as id
@@ -76,6 +72,15 @@ self.addEventListener('fetch', (event) => {
  * Handle calls to the backend api 
  */
   const apiCall = (event, id) => {
+    if (event.request.url.indexOf('reviews') !== -1) {
+      apiReviews(event, id);
+      return;
+    }
+    apiRestaurants(event, id);
+  }
+
+
+  const apiRestaurants = (event, id) => {
     id = parseInt(id);
     console.log(id);
     event.respondWith(
@@ -106,6 +111,42 @@ self.addEventListener('fetch', (event) => {
       .then(response => new Response(JSON.stringify(response)))
       .catch(error => new Response("Error fetching data", {status: 500}))
     );
+  }
+
+  const apiReviews = (event, restaurant_id) => {
+    restaurant_id = parseInt(restaurant_id);
+    event.respondWith(
+      fetch(event.request)
+    )
+    //   dbPromise.then(db => {
+    //     let tx = db.transaction('reviews', 'readonly');
+    //     let store = tx.objectStore('reviews');
+    //     return store.get(restaurant_id);
+    //   })
+    //   .then(data => {
+    //     console.log(data.data);
+    //     return (
+    //       (data && data.data) ||
+    //       fetch(event.request)
+    //       .then(res => res.json())
+    //       .then(json => {
+    //         return dbPromise.then(db => {
+    //           let tx = db.transaction('reviews', 'readwrite');
+    //           let store = tx.objectStore('reviews');
+    //           store.put({
+    //             id: Date.now(),
+    //             restaurant_id,
+    //             data: json
+    //           });
+    //           tx.complete;
+    //           return json;
+    //         });
+    //       })
+    //     );
+    //   })
+    //   .then(response => new Response(JSON.stringify(response)))
+    //   .catch(error => new Response("Error fetching data", {status: 500}))
+    // );
   }
 /**
  * Handle non api calls

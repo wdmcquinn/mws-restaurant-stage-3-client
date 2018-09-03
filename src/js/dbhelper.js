@@ -52,7 +52,10 @@ module.exports = class DBHelper {
     fetch(`${DBHelper.REVIEWS_URL}/?restaurant_id=${id}`, {method: 'GET'})
       .then(response =>   {
         response.json()
-        .then(response => callback(null, response))
+        .then(response => {
+          console.log(response);
+          callback(null, response)
+        })
         .catch(err => callback(err, null));
       })
   }
