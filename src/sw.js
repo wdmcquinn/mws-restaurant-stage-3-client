@@ -59,7 +59,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method != 'GET') return; // Exclude non GET events
   if (event.request.url.indexOf('sockjs-node/info') !== -1) return; //webpack-dev-server related
-
+  if (event.request.url.indexOf('reviews') !== -1) {
+    console.log('reviews');
+    return;
+  }
   // If the URL contains the port of the server then dont cache the request.x
   if (event.request.url.indexOf(':1337')!== -1) {
     let id = event.request.url.indexOf('id=') == -1 ? -1 // assign -1 as id
@@ -73,6 +76,8 @@ self.addEventListener('fetch', (event) => {
  * Handle calls to the backend api 
  */
   const apiCall = (event, id) => {
+    id = parseInt(id);
+    console.log(id);
     event.respondWith(
       dbPromise.then(db => {
         let tx = db.transaction('restaurants', 'readonly');
@@ -89,16 +94,17 @@ self.addEventListener('fetch', (event) => {
               let tx = db.transaction('restaurants', 'readwrite');
               let store = tx.objectStore('restaurants');
               store.put({
-                id: parseInt(id),
+                id,
                 data: json
               });
+              tx.complete;
               return json;
             });
           })
         );
       })
       .then(response => new Response(JSON.stringify(response)))
-      .catch(error => new Response("Error fetch data", {status: 500}))
+      .catch(error => new Response("Error fetching data", {status: 500}))
     );
   }
 /**

@@ -39,6 +39,7 @@ module.exports = class DBHelper {
  */
   static fetchRestaurantById(id, callback) {
     // fetch restaurant by id
+    id = id.toString();
     fetch(`${DBHelper.DATABASE_URL}?id=${id}`)
       .then(response => response.json())
       .then(restaurant => callback(null, restaurant))
