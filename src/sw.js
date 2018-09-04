@@ -82,7 +82,6 @@ self.addEventListener('fetch', (event) => {
 
   const apiRestaurants = (event, id) => {
     id = parseInt(id);
-    console.log(id);
     event.respondWith(
       dbPromise.then(db => {
         let tx = db.transaction('restaurants', 'readonly');
@@ -116,37 +115,38 @@ self.addEventListener('fetch', (event) => {
   const apiReviews = (event, restaurant_id) => {
     restaurant_id = parseInt(restaurant_id);
     event.respondWith(
-      fetch(event.request)
-    )
-    //   dbPromise.then(db => {
-    //     let tx = db.transaction('reviews', 'readonly');
-    //     let store = tx.objectStore('reviews');
-    //     return store.get(restaurant_id);
-    //   })
-    //   .then(data => {
-    //     console.log(data.data);
-    //     return (
-    //       (data && data.data) ||
-    //       fetch(event.request)
-    //       .then(res => res.json())
-    //       .then(json => {
-    //         return dbPromise.then(db => {
-    //           let tx = db.transaction('reviews', 'readwrite');
-    //           let store = tx.objectStore('reviews');
-    //           store.put({
-    //             id: Date.now(),
-    //             restaurant_id,
-    //             data: json
-    //           });
-    //           tx.complete;
-    //           return json;
-    //         });
-    //       })
-    //     );
-    //   })
-    //   .then(response => new Response(JSON.stringify(response)))
-    //   .catch(error => new Response("Error fetching data", {status: 500}))
-    // );
+    dbPromise.then(db => {
+      return db
+        .transaction('reviews')
+        .objectStore('reviews')
+        .index('restaurant_id')
+        .getAll(restaurant_id);
+    }).then(data => {
+      return (data.length && data) ||
+        fetch(event.request)
+        .then(res => res.json())
+        .then(resJson => {
+          dbPromise.then(db => {
+            let tx = db.transaction('reviews', 'readwrite');
+            let store = tx.objectStore('reviews');
+            resJson.forEach(review => {
+              store.put({
+                id: review.id,
+                restaurant_id: review.restaurant_id,
+                data: review
+              })
+            })
+          })
+        return resJson;
+        })
+    }).then(response => {
+      if (response[0].data){
+        const resMap = response.map(review => review.data);
+        return new Response(JSON.stringify(resMap));
+      }
+      return new Response(JSON.stringify(response));
+    })
+  )
   }
 /**
  * Handle non api calls

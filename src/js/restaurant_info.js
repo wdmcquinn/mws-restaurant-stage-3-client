@@ -165,7 +165,6 @@ let fillReviewsHTML = (reviews) => {
   container.appendChild(reviewForm);
   container.appendChild(br);
 
-  console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -187,7 +186,6 @@ let createReviewHTML = (review) => {
   let updatedDate = new Date(review.updatedAt);
   let lastUpdate = `${updatedDate.getMonth()}/${updatedDate.getDay()}/${updatedDate.getFullYear()}`;
 
-  console.log(lastUpdate);
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;

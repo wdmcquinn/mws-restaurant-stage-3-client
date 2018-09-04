@@ -15,7 +15,7 @@ module.exports = {
       let reviews = upgradeDB.createObjectStore('reviews', {
         keyPath: 'id'
       });
-      reviews.createIndex('restaurant_id', 'restaunt_id');
+      reviews.createIndex('restaurant_id', 'restaurant_id');
     }
   })
 }

@@ -53,7 +53,6 @@ module.exports = class DBHelper {
       .then(response =>   {
         response.json()
         .then(response => {
-          console.log(response);
           callback(null, response)
         })
         .catch(err => callback(err, null));
