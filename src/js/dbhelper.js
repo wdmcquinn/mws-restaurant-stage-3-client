@@ -171,7 +171,30 @@ module.exports = class DBHelper {
     }
     DBHelper.addToOutbox(url, options);
   }
-
+  static addNewReview (newReview) {
+    console.log(newReview);
+    const url = `${DBHelper.REVIEWS_URL}/`;
+    const options = {
+      method: 'POST',
+      body: newReview
+    }
+    console.log('add to idb')
+    DBHelper.addReviewToIDB(newReview);
+    console.log('add to outbox')
+    DBHelper.addToOutbox(url, options);
+  }
+  static addReviewToIDB (review){
+    review.updatedAt = Date.now();
+    dbPromise.then(db=> {
+      let tx = db.transaction('reviews', 'readwrite')
+      .objectStore('reviews').put({
+        id: Date.now(),
+        "restaurant_id": review.restaurant_id,
+        data: review
+      })
+      return tx.complete;
+    })
+  }
   // Add requests to outbox
   static addToOutbox (url, options){
     dbPromise.then(db => {
@@ -195,14 +218,24 @@ module.exports = class DBHelper {
     .then(messages => {
       if (!messages) return;
       messages.map(function(message){
-      return fetch(message.data.url, message.data.options)
-        .then(response => response.json())
+        const props = {
+          method: message.data.options.method,
+          body: JSON.stringify(message.data.options.body)
+        }
+        console.log(props);
+      return fetch(message.data.url, props)
+        .then(response => {
+          console.log(response);
+          if (!response.ok && !response.redirected) return;
+          return response.json();
+        })
         .then(data => {
+          console.log(data);
           // Delete the message from the outbox.
           return dbPromise.then(db => {
             return db.transaction('outbox', 'readwrite')
             .objectStore('outbox')
-            .delete(message.id); 
+            .delete(message.id);
           })
         })
         .catch(err => console.log(err))

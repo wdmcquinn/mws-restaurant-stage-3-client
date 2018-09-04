@@ -200,7 +200,7 @@ let createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = `<p>Date: ${lastUpdate}</p>`;
+  date.innerHTML = `<p>Date: ${lastUpdate} </p>`;
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -243,15 +243,18 @@ let getParameterByName = (name, url) => {
 let addReview = () =>{
 let name = document.querySelector('#name').value;
 let rating = document.querySelector('#rating').value
-let comments = document.querySelector('#comments').value
+let comments = document.querySelector('#comments').value;
 let newReview = {
+  restaurant_id: self.restaurant.id,
   name,
   rating,
   comments,
 };
 
-console.log(newReview);
+
+DBHelper.addNewReview(newReview);
 document.forms[0].reset();
+//location.reload();
 }
 // Call the initMap Function
 initMap();
