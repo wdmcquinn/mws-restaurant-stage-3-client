@@ -19,7 +19,7 @@ function initMap(){
         center: restaurant.latlng,
         zoom: 12,
       });
-
+      newMap.scrollWheelZoom.disable();
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -155,15 +155,23 @@ let fillReviewsHTML = (reviews) => {
       <input type="text" id="name">
     <br>
     <label for="rating">Rating</label><br>
-      <input type="text" id="rating">
+      <select id="rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
     <br>
       <label for="comments">Comments</label><br>
       <textarea id="comments"></textarea>
     <br>
-      <button type="button">Submit</button>
+      <button type="button" id="addreview">Submit</button>
   `;
   container.appendChild(reviewForm);
+  document.querySelector('#addreview').addEventListener('click', addReview);
   container.appendChild(br);
+
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -172,7 +180,7 @@ let fillReviewsHTML = (reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
- 
+
    reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -230,6 +238,20 @@ let getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+let addReview = () =>{
+let name = document.querySelector('#name').value;
+let rating = document.querySelector('#rating').value
+let comments = document.querySelector('#comments').value
+let newReview = {
+  name,
+  rating,
+  comments,
+};
+
+console.log(newReview);
+document.forms[0].reset();
 }
 // Call the initMap Function
 initMap();
