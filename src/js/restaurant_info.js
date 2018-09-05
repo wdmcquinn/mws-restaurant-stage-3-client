@@ -167,6 +167,9 @@ let fillReviewsHTML = (reviews) => {
       <button type="button" id="addreview">Submit</button>
   `;
   container.appendChild(reviewForm);
+  reviewForm.addEventListener('submit', function(e){
+    e.preventDefault();
+  })
   document.querySelector('#addreview').addEventListener('click', addReview);
   container.appendChild(br);
 
