@@ -171,9 +171,11 @@ module.exports = class DBHelper {
   */
   static addNewReview (newReview) {
     const url = `${DBHelper.REVIEWS_URL}/`;
+    const id = newReview.restaurant_id
+    let review = JSON.stringify(newReview);
     const options = {
       method: 'POST',
-      body: newReview
+      body: review
     }
     DBHelper.addReviewToIDB(newReview);
     DBHelper.addToOutbox(url, options);
@@ -221,7 +223,7 @@ module.exports = class DBHelper {
       messages.map(function(message){
         const props = {
           method: message.data.options.method,
-          body: JSON.stringify(message.data.options.body)
+          body: message.data.options.body
         }
       return fetch(message.data.url, props)
         .then(response => {
