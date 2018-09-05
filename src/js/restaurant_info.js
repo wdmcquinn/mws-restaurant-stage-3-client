@@ -1,6 +1,6 @@
 //css imports
 import '../css/styles.css';
-
+// import javascript files
 const DBHelper = require('./dbhelper');
 
 let restaurant;
@@ -32,11 +32,10 @@ function initMap(){
     DBHelper.tryCommit();
   });
 }
-
 /**
  * Get current restaurant from page URL.
  */
-  let fetchRestaurantFromURL = (callback) => {
+let fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
@@ -52,11 +51,10 @@ function initMap(){
         return;
       }
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
 }
-
 /**
  * Create restaurant HTML and add it to the webpage
  */
@@ -103,7 +101,9 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillReviewsHTML(reviews);
   });
 }
-
+/**
+ * Update the favorite status of the restaurant.
+ */
 let updateFavStatus = (restaurant) =>{
   let is_fav = restaurant.is_favorite.toString();
   let imgTag = document.querySelector(`#fav${restaurant.id}`);
@@ -115,7 +115,6 @@ let updateFavStatus = (restaurant) =>{
       imgTag.alt = 'This restaurant is not a favorite';
     }
 }
-
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
@@ -135,7 +134,6 @@ let fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours)
     hours.appendChild(row);
   }
 }
-
 /**
  * Create all reviews HTML and add them to the webpage.
  */
@@ -186,7 +184,6 @@ let fillReviewsHTML = (reviews) => {
   });
   container.appendChild(ul);
 }
-
 /**
  * Create review HTML and add it to the webpage.
  */
@@ -195,25 +192,30 @@ let createReviewHTML = (review) => {
   let lastUpdate = `${updatedDate.getMonth()}/${updatedDate.getDay()}/${updatedDate.getFullYear()}`;
 
   const li = document.createElement('li');
+  const d = document.createElement('div');
+  d.classList.add('review-header');
   const name = document.createElement('p');
   name.innerHTML = review.name;
-  li.appendChild(name);
+  d.appendChild(name);
+
 
   const date = document.createElement('p');
-  date.innerHTML = `<p>Date: ${lastUpdate} </p>`;
-  li.appendChild(date);
+  date.innerHTML = `${lastUpdate}`;
+  d.appendChild(date);
+
+  li.appendChild(d);
 
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.innerHTML = `<em>Rating: ${review.rating}</em>`;
   li.appendChild(rating);
 
   const comments = document.createElement('p');
+  comments.id ='user-comments';
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
   return li;
 }
-
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
@@ -223,7 +225,6 @@ let fillBreadcrumb = (restaurant=self.restaurant) => {
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
 }
-
 /**
  * Get a parameter by name from page URL.
  */
@@ -239,7 +240,9 @@ let getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-
+/**
+ *Add a new Review
+ */
 let addReview = () =>{
 let name = document.querySelector('#name').value;
 let rating = document.querySelector('#rating').value

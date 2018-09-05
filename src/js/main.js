@@ -22,27 +22,21 @@ if ('serviceWorker' in navigator) { // Check to see if the browser supports serv
       console.log(err);
     })
 }
-
-
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchFilters();
   updateRestaurants();
   setFocus();
   initMap();
 });
-
 // Add onchange event for each select.
 document.querySelectorAll('select').forEach(select => {
   select.addEventListener('change', function(){
     updateRestaurants();
   });
 });
-
-
 
 let fetchFilters = () => {
   DBHelper.fetchFilters((error, neighborhoods, cuisines) => {
@@ -53,8 +47,6 @@ let fetchFilters = () => {
     fillCuisinesHTML();
   })
 }
-
-
 /**
  * Set neighborhoods HTML.
  */
@@ -67,7 +59,6 @@ let fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     select.append(option);
   });
 }
-
 /**
  * Set cuisines HTML.
  */
@@ -81,7 +72,9 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
     select.append(option);
   });
 }
-
+/**
+ * Initialize Map
+ */
 function initMap() {
   newMap = L.map('mapid', {
     center: [40.722216, -73.987501],
@@ -95,8 +88,6 @@ function initMap() {
     accessToken: process.env.TOKEN
   }).addTo(newMap);
 }
-
-
 /**
  * Update page and map for current restaurants.
  */
@@ -120,7 +111,6 @@ function updateRestaurants() {
     }
   })
 }
-
 /**
  * Clear current restaurants, their HTML and remove their map markers.
  */
@@ -137,7 +127,6 @@ let resetRestaurants = (restaurants) => {
   self.markers = [];
   self.restaurants = restaurants;
 }
-
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
@@ -148,7 +137,6 @@ let fillRestaurantsHTML = (restaurants = self.restaurants) => {
   });
   addMarkersToMap();
 }
-
 /**
  * Create restaurant HTML.
  */
@@ -208,7 +196,6 @@ let createRestaurantHTML = (restaurant) => {
 
   return li
 }
-
 /**
  * Add markers for current restaurants to the map.
  */

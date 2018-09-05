@@ -7,7 +7,6 @@
  */
 import { dbPromise } from './indb';
 
-
 module.exports = class DBHelper {
 
 /**
@@ -23,7 +22,6 @@ module.exports = class DBHelper {
     const port = 1337
     return `http://localhost:${port}/reviews`;
   }
-
 /**
  * Fetch all restaurants.
  */
@@ -33,7 +31,6 @@ module.exports = class DBHelper {
       .then(restaurants => callback(null, restaurants))
       .catch(error => callback(error, console.log(error))); //Server Error
   }
-
 /**
  * Fetch a restaurant by its ID.
  */
@@ -45,9 +42,9 @@ module.exports = class DBHelper {
       .then(restaurant => callback(null, restaurant))
       .catch(err => callback(err, null));
   }
-  /**
-   * Fetch reviews by restauraunts id
-   */
+/**
+ * Fetch reviews by restauraunts id
+ */
   static fetchReviewsById(id, callback) {
     fetch(`${DBHelper.REVIEWS_URL}/?restaurant_id=${id}`, {method: 'GET'})
       .then(response =>   {
@@ -58,7 +55,6 @@ module.exports = class DBHelper {
         .catch(err => callback(err, null));
       })
   }
-
 /**
  * Fetch restaurants by a cuisine type with proper error handling.
  */
@@ -69,7 +65,6 @@ module.exports = class DBHelper {
     .then(restaurants => callback(null, restaurants))
     .catch(err => callback(err, null));
   }
-
 /**
  * Fetch restaurants by a neighborhood with proper error handling.
  */
@@ -80,7 +75,6 @@ module.exports = class DBHelper {
     .then(restaurants => callback(null, restaurants))
     .catch(err => callback(err, null));
   }
-
 /**
  * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
  */
@@ -100,11 +94,9 @@ module.exports = class DBHelper {
     })
     .catch(err => callback(err, null));
   }
-
-  /**
-   * 
-   * Fetch unique neighborhoods and cuisines for the select boxes
-   */
+/**
+ * Fetch unique neighborhoods and cuisines for the select boxes
+ */
   static fetchFilters(callback){
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) callback(error, null);
@@ -116,24 +108,21 @@ module.exports = class DBHelper {
     DBHelper.tryCommit();
     });
   }
-
-  /**
-   * Restaurant page URL.
-   */
+/**
+ * Restaurant page URL.
+ */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
-
-  /**
-   * Restaurant image URL.
-   */
+/**
+ * Restaurant image URL.
+ */
   static imageUrlForRestaurant(restaurant) {
     return (`/img/${restaurant.photograph}`);
   }
-
-  /**
-   * Map marker for a restaurant.
-   */
+/**
+ * Map marker for a restaurant.
+ */
   static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
@@ -144,8 +133,14 @@ module.exports = class DBHelper {
       marker.addTo(map);
     return marker;
   }
-
-  // Change the favorite Status
+/**
+*  Huge thanks to Doug Brown for the videos and walkthroughs.
+*  His was the only example i could find that made sense and
+*  allowed me to complete this part.
+ */
+/**
+ * Change the favorite Status
+ */
   static change_fav_status(restaurant){
     if (!restaurant.is_favorite || restaurant.is_favorite.toString() == 'false'){
       restaurant.is_favorite = 'true';
@@ -171,6 +166,9 @@ module.exports = class DBHelper {
     }
     DBHelper.addToOutbox(url, options);
   }
+/**
+ *Add a new review
+  */
   static addNewReview (newReview) {
     console.log(newReview);
     const url = `${DBHelper.REVIEWS_URL}/`;
@@ -183,6 +181,9 @@ module.exports = class DBHelper {
     console.log('add to outbox')
     DBHelper.addToOutbox(url, options);
   }
+/**
+ *Add a new review to idb
+  */
   static addReviewToIDB (review){
     review.updatedAt = Date.now();
     dbPromise.then(db=> {
@@ -195,7 +196,9 @@ module.exports = class DBHelper {
       return tx.complete;
     })
   }
-  // Add requests to outbox
+/**
+ *Add request to outbox
+  */
   static addToOutbox (url, options){
     dbPromise.then(db => {
       const tx = db.transaction('outbox', 'readwrite');
@@ -207,8 +210,9 @@ module.exports = class DBHelper {
     .catch(error => {console.log(error)})
     .then(DBHelper.tryCommit());
   }
-
-  // Attempt to commit changes to the database.
+/**
+ *Try to commit the changes to the backend.
+  */
   static tryCommit(){
     dbPromise.then(db => {
       const tx = db.transaction('outbox', 'readonly');
@@ -242,13 +246,6 @@ module.exports = class DBHelper {
       })
     }
   )}
-
-/**
-  *  Huge thanks to Doug Brown for the videos and walkthroughs.
-  *  His was the only example i could find that made sense and
-  *  allowed me to complete this part.
- */
-
   /**
    * Update the main restaurants object
    */

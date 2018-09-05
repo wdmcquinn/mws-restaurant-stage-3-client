@@ -9,6 +9,12 @@ html, body{
   padding: 0px;
   overflow-x: hidden;
 }
+input, select, textarea, button{
+  padding: 0;
+  margin: 0;
+  box-sizing: content-box;
+  border: 1px solid black;
+}
 
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
@@ -117,6 +123,9 @@ nav h1 a {
   width: 100%;
   background-color: #ccc;
 }
+.leaflet-top, .leaflet-bottom{
+  z-index: 999;
+}
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
@@ -142,13 +151,14 @@ nav h1 a {
   font-size: 11pt;
   height: 100%;
   letter-spacing: 0;
-  padding: 0 10px;
+padding: 0 10px;  
   width: 200px;
 }
 .filter-options select:focus {
   outline: none;
-  background-color: #c3d1e9;
-  border: 2px solid #769fe6;
+  background-color: #ccc;
+  border: 2px solid #3397db;
+  box-shadow: 0 0 10px #3397db;
 }
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
@@ -288,45 +298,90 @@ nav h1 a {
   letter-spacing: -1px;
   padding-bottom: 1pt;
 }
+.review-header{
+  display: flex;
+  justify-content: space-between;
+}
+.review-header p{
+  font-size: 1.5em;
+}
 #reviews-list {
   margin: 0;
   padding: 0;
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
-  margin: 0 0 30px;
+  margin: 0 auto;
+  margin-top: 30px;
   overflow: hidden;
   padding: 0 20px 20px;
   position: relative;
-  width: 85%;
+  width: 90%;
 }
 #reviews-list li p {
   margin: 0 0 10px;
 }
+#user-comments{
+  font-size: 1.2em;
+}
 #restaurant-hours td {
   color: #666;
+}
+/* ========================   Review Form ========================= */
+#frm-review{
+  width: 100%;
+}
+#frm-review input{
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 1.5em;
+}
+#frm-review input:focus, select:focus, textarea:focus, button:focus{
+  outline: none;
+  border-color: #3397db;
+  box-shadow: 0 0 10px #3397db;
+}
+#frm-review select{
+  width: 100%;
+  height: 30px;
+  background-color: white;
+  border-radius: 5px;
+  font-size: 1.5em;
+}
+#frm-review textarea{
+  width: 100%;
+  height: 75px;
+  border-radius: 5px;
+  font-size: 1.5em;
+}
+#frm-review button{
+  width: 100%;
+  height: 30px;
+  background-color: #252831;
+  color: white;
+  border-radius: 5px;
+  font-size: 1.5em;
 }
 
 /* ====================== Screens Larger than 800px =============== */
 @media screen and (min-width: 800px){
+  #restaurant-container, #reviews-container, #frm-review{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #restaurants-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
-#restaurant-container, #reviews-container{
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-#restaurants-list {
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-#restaurants-list li {
-  flex-basis: 35%;
-}
-
+  #restaurants-list li {
+    flex-basis: 35%;
+  }
 }
 
 /* ====================== Screens Larger than 1200px ============== */
@@ -344,21 +399,16 @@ nav h1 a {
 
   #restaurant-container{
     flex-basis: 40%;
-    margin-top: 125px;
     order: 1;
   }
   #reviews-container{
     flex-basis: 40%;
     margin: 0;
-    margin-top: 125px;
     order: 2;
   }
-
   .inside #map-container{
-    order: 3;
+    order: -1;
+    margin-top: 125px;
     flex-basis: 100%;
-    margin: 0;
   }
-
-
 }
