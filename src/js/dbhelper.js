@@ -170,15 +170,12 @@ module.exports = class DBHelper {
  *Add a new review
   */
   static addNewReview (newReview) {
-    console.log(newReview);
     const url = `${DBHelper.REVIEWS_URL}/`;
     const options = {
       method: 'POST',
       body: newReview
     }
-    console.log('add to idb')
     DBHelper.addReviewToIDB(newReview);
-    console.log('add to outbox')
     DBHelper.addToOutbox(url, options);
   }
 /**
@@ -226,15 +223,12 @@ module.exports = class DBHelper {
           method: message.data.options.method,
           body: JSON.stringify(message.data.options.body)
         }
-        console.log(props);
       return fetch(message.data.url, props)
         .then(response => {
-          console.log(response);
           if (!response.ok && !response.redirected) return;
           return response.json();
         })
         .then(data => {
-          console.log(data);
           // Delete the message from the outbox.
           return dbPromise.then(db => {
             return db.transaction('outbox', 'readwrite')

@@ -257,7 +257,7 @@ let newReview = {
 
 DBHelper.addNewReview(newReview);
 document.forms[0].reset();
-//location.reload();
+location.reload();
 }
 // Call the initMap Function
 initMap();
