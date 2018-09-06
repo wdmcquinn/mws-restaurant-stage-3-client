@@ -9,6 +9,7 @@ let restaurants,
   cuisines
 let newMap
 let markers = []
+let staticMap = true;
 
 
 /**
@@ -29,12 +30,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchFilters();
   updateRestaurants();
   setFocus();
-  initMap();
 });
+
 // Add onchange event for each select.
 document.querySelectorAll('select').forEach(select => {
   select.addEventListener('change', function(){
-    updateRestaurants();
+    initMap();
+    //updateRestaurants();
   });
 });
 
@@ -76,10 +78,17 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Map
  */
 function initMap() {
-  newMap = L.map('mapid', {
-    center: [40.722216, -73.987501],
-    zoom: 12,
-  });
+  updateRestaurants();
+    let staticImage = document.querySelector('.static-map');
+    if (staticImage){
+      staticImage.remove();
+    }
+    if (newMap == undefined){
+      newMap = L.map('mapid', {
+        center: [40.722216, -73.987501],
+        zoom: 12,
+      });
+    }
   newMap.scrollWheelZoom.disable();
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -110,6 +119,7 @@ function updateRestaurants() {
       fillRestaurantsHTML();
     }
   })
+  DBHelper.tryCommit();
 }
 /**
  * Clear current restaurants, their HTML and remove their map markers.
@@ -135,6 +145,10 @@ let fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
+  if (staticMap){
+    fetchStaticMap();
+    return;
+  }
   addMarkersToMap();
 }
 /**
@@ -209,6 +223,35 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
+}
+/**
+ *On first load get a static map to increase performance.
+ */
+let fetchStaticMap = (restaurants = self.restaurants) => {
+  let setMarkers = '';
+  let mapDiv = document.getElementById('mapid');
+  let width = mapDiv.offsetWidth > 1280 ? 1280 : mapDiv.offsetWidth;
+  restaurants.forEach((r,i,a) => {
+    setMarkers = setMarkers + `pin-s+248dca(${r.latlng.lng},${r.latlng.lat})${i <= a.length -2 ? ',' : ''}`;
+  });
+  let url = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${setMarkers}/-73.987501,40.722216,11/${width}x300?access_token=${process.env.TOKEN}`;
+  let staticImage = document.createElement('img');
+  staticImage.src = url;
+  staticImage.classList.add('static-map');
+  staticImage.alt = 'Map of New York Area.';
+  mapDiv.appendChild(staticImage);
+  window.addEventListener('resize', function(){
+    if (staticMap){
+      staticMap = false;
+      initMap();
+    }
+  })
+  staticImage.addEventListener('click', function(){
+    if (staticMap){
+      staticMap = false;
+      initMap();
+    }
+  })
 }
 /**
  * Change the favorite icon and alt text

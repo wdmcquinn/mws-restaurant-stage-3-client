@@ -20,6 +20,9 @@ Node and NPM are required to run this project instruction for installation can b
 #ex.. TOKEN='YOUR_API_KEY'
 
 ```
+##### Webpack Details
+The current state of the project is in production mode to allow the compiler to minify the javascript files and optimize the image files. If you would like to change this the very last line of the webpack.config.js file should be changed to development. This will allow for faster compile times but slower performance on the site.
+
 ###### Start the server
 ```
 # npm start

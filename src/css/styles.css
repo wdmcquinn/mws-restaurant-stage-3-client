@@ -118,13 +118,24 @@ nav h1 a {
     text-decoration: underline;
 }
 /* ====================== Map ====================== */
-#mapid {
+#map-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 300px;
-  width: 100%;
+}
+#mapid {
   background-color: #ccc;
+  min-width: 100%;
+  min-height: 100%;
 }
 .leaflet-top, .leaflet-bottom{
   z-index: 999;
+}
+.static-map{
+  max-height: 300px;
+  min-width: 100%;
+  cursor: pointer;
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -134,6 +145,7 @@ nav h1 a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 10px;
 }
 .filter-options h2 {
   color: white;

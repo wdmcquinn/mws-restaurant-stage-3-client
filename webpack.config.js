@@ -82,7 +82,7 @@ module.exports = {
       }),
       new CompressionPlugin({ test: /\.js$/})
   ],
-  mode: 'development'
+  mode: 'production'
 }
 
 
