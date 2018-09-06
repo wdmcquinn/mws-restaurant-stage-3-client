@@ -1,14 +1,18 @@
 # Mobile Web Specialist Certification Course
 ---
-
 #Restaurant Reviews App -- Stage 3
 
 ## Project Overview
 For the Restaurant Reviews projects, you will incrementally convert a static webpage to a mobile-ready web application. In Stage Two, you will take the responsive, accessible design you built in Stage One and connect it to an external server. You’ll begin by using asynchronous JavaScript to request JSON data from the server. You’ll store data received from the server in an offline database using IndexedDB, which will create an app shell architecture. Finally, you’ll work to optimize your site to meet performance benchmarks, which you’ll test using Lighthouse.
 
+## Getting Started
+
+###### Prerequisites
+Node and NPM are required to run this project instruction for installation can be found at [nodejs.org](https://nodejs.org/en/).
+
 ###### Install project dependancies
 ```Install project dependancies
-# npm install
+# npm i
 ```
 ###### Create the env file
 ```
@@ -20,7 +24,6 @@ For the Restaurant Reviews projects, you will incrementally convert a static web
 ```
 # npm start
 ```
-
-### You should now be able to access the client at http://localhost:8000
+### After a short build process You should be able to access the client at http://localhost:8000
 
 

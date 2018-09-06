@@ -158,7 +158,7 @@ let createRestaurantHTML = (restaurant) => {
   d.classList.add('tile-header');
 
   // Name of Restaurant
-  const name = document.createElement('h1');
+  const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   d.appendChild(name);
 
