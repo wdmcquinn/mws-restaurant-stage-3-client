@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "--- #### _Three Stage Course Material Project - Restaurant Reviews_",
   "scripts": {
-    "start": "webpack-dev-server",
+    "dev": :"webpack-dev-server",
+    "start": "webpack -p",
     "build:prod": "webpack",
     "publish": "webpack -p"
   },
