@@ -243,6 +243,8 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
  */
 let fetchStaticMap = (restaurants = self.restaurants) => {
   let setMarkers = "";
+  let token =
+    "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfproZZbmkqQjQQQ";
   let mapDiv = document.getElementById("mapid");
   let width = mapDiv.offsetWidth > 1280 ? 1280 : mapDiv.offsetWidth;
   restaurants.forEach((r, i, a) => {
