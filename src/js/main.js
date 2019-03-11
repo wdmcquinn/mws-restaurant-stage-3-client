@@ -3,7 +3,8 @@ import "../css/styles.css";
 
 const DBHelper = require("./dbhelper");
 const path = require("path");
-const token = process.env.TOKEN;
+const token =
+  "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfproZZbmkqQjQQQ";
 
 let restaurants, neighborhoods, cuisines;
 let newMap;
