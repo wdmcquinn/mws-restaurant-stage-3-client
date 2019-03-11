@@ -28,8 +28,7 @@ function initMap() {
             'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
           maxZoom: 18,
           id: "mapbox.streets",
-          accessToken:
-            "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfZZbmkqQjQQQ"
+          accessToken: process.env.TOKEN
         }
       ).addTo(newMap);
       DBHelper.mapMarkerForRestaurant(self.restaurant, newMap);

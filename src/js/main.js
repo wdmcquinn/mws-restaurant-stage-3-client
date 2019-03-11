@@ -3,8 +3,7 @@ import "../css/styles.css";
 
 const DBHelper = require("./dbhelper");
 const path = require("path");
-const token =
-  "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfproZZbmkqQjQQQ";
+const token = process.env.TOKEN;
 
 let restaurants, neighborhoods, cuisines;
 let newMap;
@@ -78,6 +77,7 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Map
  */
 function initMap() {
+  console.log(process.env.TOKEN);
   updateRestaurants();
   let staticImage = document.querySelector(".static-map");
   if (staticImage) {
@@ -97,7 +97,7 @@ function initMap() {
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
       id: "mapbox.streets",
-      accessToken: token
+      accessToken: process.env.TOKEN
     }
   ).addTo(newMap);
 }
@@ -243,8 +243,6 @@ let addMarkersToMap = (restaurants = self.restaurants) => {
  */
 let fetchStaticMap = (restaurants = self.restaurants) => {
   let setMarkers = "";
-  let token =
-    "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqa2UxOTl0ODFuMWkzd21pMjhnd2tmMHAifQ.YG7Lj9VtsRfproZZbmkqQjQQQ";
   let mapDiv = document.getElementById("mapid");
   let width = mapDiv.offsetWidth > 1280 ? 1280 : mapDiv.offsetWidth;
   restaurants.forEach((r, i, a) => {
@@ -254,7 +252,9 @@ let fetchStaticMap = (restaurants = self.restaurants) => {
         i <= a.length - 2 ? "," : ""
       }`;
   });
-  let url = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${setMarkers}/-73.987501,40.722216,11/${width}x300?access_token=${token}`;
+  let url = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${setMarkers}/-73.987501,40.722216,11/${width}x300?access_token=${
+    process.env.TOKEN
+  }`;
   let staticImage = document.createElement("img");
   staticImage.src = url;
   staticImage.classList.add("static-map");
