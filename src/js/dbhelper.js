@@ -14,13 +14,13 @@ module.exports = class DBHelper {
   static get DATABASE_URL() {
     //const port = 1337  // Change this to your server port
     //return `http://localhost:${port}/restaurants`;
-    return "https://mws-backend-technicdad/restaurants";
+    return "https://mws-backend-technicdad.herokuapp.com/restaurants";
   }
 
   static get REVIEWS_URL() {
     //const port = 1337;
     //return `http://localhost:${port}/reviews`;
-    return "https://mws-backend-technicdad/restaurants";
+    return "https://mws-backend-technicdad.herokuapp.com/restaurants";
   }
   /**
    * Fetch all restaurants.
