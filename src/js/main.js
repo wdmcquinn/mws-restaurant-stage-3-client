@@ -3,7 +3,8 @@ import "../css/styles.css";
 
 const DBHelper = require("./dbhelper");
 const path = require("path");
-const token = process.env.TOKEN;
+const token =
+  "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqdDR2Mjh5ZTA1cGs0NHFtcnVudG5sZWwifQ.9eDhWPonFUgyI2Q8Hl9Lpw";
 
 let restaurants, neighborhoods, cuisines;
 let newMap;
@@ -97,7 +98,7 @@ function initMap() {
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
       id: "mapbox.streets",
-      accessToken: process.env.TOKEN
+      accessToken: token
     }
   ).addTo(newMap);
 }
@@ -252,9 +253,7 @@ let fetchStaticMap = (restaurants = self.restaurants) => {
         i <= a.length - 2 ? "," : ""
       }`;
   });
-  let url = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${setMarkers}/-73.987501,40.722216,11/${width}x300?access_token=${
-    process.env.TOKEN
-  }`;
+  let url = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${setMarkers}/-73.987501,40.722216,11/${width}x300?access_token=${token}`;
   let staticImage = document.createElement("img");
   staticImage.src = url;
   staticImage.classList.add("static-map");

@@ -2,7 +2,8 @@
 import "../css/styles.css";
 // import javascript files
 const DBHelper = require("./dbhelper");
-
+const token =
+  "pk.eyJ1Ijoid2RtY3F1aW5uIiwiYSI6ImNqdDR2Mjh5ZTA1cGs0NHFtcnVudG5sZWwifQ.9eDhWPonFUgyI2Q8Hl9Lpw";
 let restaurant;
 let newMap;
 let id;
@@ -28,7 +29,7 @@ function initMap() {
             'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
           maxZoom: 18,
           id: "mapbox.streets",
-          accessToken: process.env.TOKEN
+          accessToken: token
         }
       ).addTo(newMap);
       DBHelper.mapMarkerForRestaurant(self.restaurant, newMap);
