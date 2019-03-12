@@ -78,7 +78,6 @@ let fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Map
  */
 function initMap() {
-  console.log(process.env.TOKEN);
   updateRestaurants();
   let staticImage = document.querySelector(".static-map");
   if (staticImage) {
